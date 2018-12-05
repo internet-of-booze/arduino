@@ -12,8 +12,7 @@
  */
 WebUSB WebUSBSerial(1 /* https:// */, "webusb.github.io/arduino/demos/rgb");
 
-Servo SugarServo; // create servo object for sugarcone servo;
-Servo LighterServo; // create servo object for lighter/fire servo;
+Servo NozzleServo; // create servo object for sugarcone servo;
 
 #define Serial WebUSBSerial
 
@@ -21,6 +20,8 @@ int color[3];
 int colorIndex;
 
 void setup() {
+  pinMode(5, OUTPUT);
+
   while (!Serial) {
     ;
   }
@@ -29,25 +30,22 @@ void setup() {
   Serial.flush();
   colorIndex = 0;
   
-  SugarServo.attach(9);
-  LighterServo.attach(10);
+  NozzleServo.attach(10);
 }
 
 void loop() {
   if (Serial && Serial.available()) {
     color[colorIndex++] = Serial.read();
     if (colorIndex == 3) {
-      //sugarservoval = map(color[0], 0, 255, 0, 180);
       
-      SugarServo.write(color[0]/2);
-      LighterServo.write(color[1]/2);
-      analogWrite(11, color[2]); // Pump power output
+      NozzleServo.write(map(color[0], 0, 255, 10, 160));
+      analogWrite(5, map(color[1], 0, 255, 0, 255)); // Pump power output
 
-      Serial.print("Set LED to ");
-      Serial.print(color[0]);
-      Serial.print(", ");
+      Serial.print("Nozzle Angle: ");
+      Serial.print(map(color[0], 0, 255, 10, 160));
+      Serial.print(", Pump Strength: ");
       Serial.print(color[1]);
-      Serial.print(", ");
+      Serial.print(", AUX: ");
       Serial.print(color[2]);
       Serial.print(".\r\n");
       Serial.flush();
