@@ -58,7 +58,7 @@ double count=0;
  */
 
 
-// https://internet-of-booze-xmas.firebaseapp.com/ 
+//WebUSB WebUSBSerial(1 /* https:// */, "internet-of-booze-xmas.firebaseapp.com");
 WebUSB WebUSBSerial(1 /* https:// */, "webusb.github.io/arduino/demos/rgb");
 
 Servo NozzleServo; // create servo object for sugarcone servo;
@@ -71,6 +71,7 @@ int FADE;
 
 void setup() {
   FADE = 1;
+  NozzleServo.write(115);
 
   
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
@@ -114,7 +115,7 @@ void loop() {
     serialinput[serialinputIndex++] = Serial.read();
     if (serialinputIndex == 3) {
       
-      NozzleServo.write(map(serialinput[0], 0, 255, 10, 160));
+      NozzleServo.write(map(serialinput[0], 0, 255, 115, 20));
       analogWrite(5, map(serialinput[1], 0, 255, 0, 255)); // Pump power output
 
       Serial.print("Nozzle Angle: ");
